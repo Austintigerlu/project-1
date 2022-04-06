@@ -1,0 +1,10 @@
+.starterPage {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+    text-align: center;
+}
+.body {
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnfOcMWmK9h_oejGTKd1cUhwXd-22lAsHlcA&usqp=CAU);
+}
