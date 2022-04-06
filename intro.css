@@ -1,10 +1,15 @@
-.starterPage {
-    margin: auto;
-    width: 50%;
-    border: 3px solid green;
-    padding: 10px;
+.introTitle {
     text-align: center;
+    color: antiquewhite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Play', sans-serif;
+    font-size: xx-large;
 }
-.body {
-    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnfOcMWmK9h_oejGTKd1cUhwXd-22lAsHlcA&usqp=CAU);
+body{
+    background: url(https://cfmarinecorpsfoundation.org/wp-content/uploads/2019/07/red-casino-background.jpg);
+    /* background-repeat: ; */
+    background-size: cover;
 }
