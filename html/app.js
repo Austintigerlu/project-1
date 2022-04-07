@@ -39,11 +39,12 @@ betButton.addEventListener('click', () => {
     gameplay.style.display = 'inline';
     let updatedWallet = walletAmountNumber - betValue;
     walletAmount.innerHTML = updatedWallet;
+    dealCards();
 })
 // betValue is now the ammount the player chose
 
 // Card deck
-
+// https://www.programiz.com/javascript/examples/shuffle-card used as reference to create deck
 let suit = ['Hearts', 'Spades', 'Clubs', 'Diamonds']
 let rank = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
 let score = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -61,35 +62,26 @@ for (let i = 0; i<suit.length; i++) {
         deck.push(card);
     }
 }
-// randomCard from the deck
-let cardsinHand= [];
-function randomCard(){
-    let random = Math.floor(Math.random()*51)
-    cardsinHand.push([deck[random].suit, deck[random].rank, deck[random].score])
+//  deck should have 52 cards
+// shuffle deck
+for (let i=0; i<deck.length; i++) {
+    let random = Math.floor(Math.random() *52);
+    let deckshuffle = deck[i];
+    deck[i] = deck[random];
+    deck[random] = deckshuffle;
+    // console.log(deck[random])
 }
-console.log(cardsinHand)
-
-// player cards
-let userCard1;
-let userCard2;
-function randomUserCards(){
-    userCard1 = randomCard();
-    userCard2 = randomCard();
+// deck is now random
+console.log(deck.shift())
+function dealCards() {
+    let playercard1 = deck.shift()
+    let computercard1 = deck.shift()
+    let playercard2 = deck.shift()
+    let computercard2 = deck.shift()
+    let computerCalculation = computercard1.score + computercard2.score
+    let playerCalculation = playercard1.score + playercard2.score
+    computerCardsDisplay.innerHTML = `Dealer Cards: ${computercard1.suit} of ${computercard1.rank} & ${computercard2.suit} of ${computercard2.rank}`
+    computerScore.innerHTML = `Dealer Score: ${computerCalculation}`
+    playerCards.innerHTML = `Player Cards ${playercard1.suit} of ${playercard1.rank} & ${playercard2.suit} of ${playercard2.rank}`
+    playerScore.innerHTML = `Player Score: ${playerCalculation}`
 }
-
-randomUserCards()
-
-let combinedScore = cardsinHand[0][2] + cardsinHand[1][2]
-console.log(combinedScore)
-// Player cards print on screen after bet amount
-playerCards.innerHTML = `Player Cards: ${cardsinHand[0][1]} of ${cardsinHand[0][0]} & ${cardsinHand[1][1]} of ${cardsinHand[1][0]}`
-playerScore.innerHTML = `Player Score: ${combinedScore}`
-
-// computer cards
-let computerCard1;
-let computerCard2;
-function randomComputerCards(){
-    computerCard1 = randomCard();
-    computerCard2 = randomCard();
-}
-randomComputerCards()
