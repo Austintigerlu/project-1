@@ -14,6 +14,7 @@ let hitButton = document.getElementById('hit')
 let stayButton = document.getElementById('stay')
 let userCards = document.querySelector('.userCards')
 let playerScore = document.getElementById('playerScore')
+let playerHitCard = document.getElementById('playerHitCard')
 
 // computer DOM
 let computerCards = document.querySelector('.gameplay')
@@ -23,6 +24,7 @@ let computerScore = document.getElementById('computerScore')
 // gameplay DOM
 let gameplay = document.querySelector('.gameplay');
 gameplay.style.display = 'none';
+let gameStarted = false;
 // hitButton.style.display = 'none';
 // stayButton.style.display = 'none';
 
@@ -40,6 +42,7 @@ betButton.addEventListener('click', () => {
     let updatedWallet = walletAmountNumber - betValue;
     walletAmount.innerHTML = updatedWallet;
     dealCards();
+    gameStarted = true;
 })
 // betValue is now the ammount the player chose
 
@@ -72,16 +75,39 @@ for (let i=0; i<deck.length; i++) {
     // console.log(deck[random])
 }
 // deck is now random
-console.log(deck.shift())
+function scoreCalculation(cardsInHand) {
+    let scoreValue = 0;
+    for (let i=0; i<cardsInHand.length; i++){
+        let card = cardsInHand[i];
+        console.log(card)
+        if(card.rank === 'Ace') {
+            if(scoreValue <= 11){
+                card.score = 11;
+                scoreValue += card.score;
+            }
+        } else {
+            scoreValue += card.score;
+        }
+    }
+    console.log(scoreValue
+    )
+}
+
+let playerDealtCards = [deck.shift(), deck.shift()]
+let dealerCards = [deck.shift(), deck.shift()]
+scoreCalculation(playerDealtCards)
 function dealCards() {
-    let playercard1 = deck.shift()
-    let computercard1 = deck.shift()
-    let playercard2 = deck.shift()
-    let computercard2 = deck.shift()
-    let computerCalculation = computercard1.score + computercard2.score
-    let playerCalculation = playercard1.score + playercard2.score
-    computerCardsDisplay.innerHTML = `Dealer Cards: ${computercard1.suit} of ${computercard1.rank} & ${computercard2.suit} of ${computercard2.rank}`
-    computerScore.innerHTML = `Dealer Score: ${computerCalculation}`
-    playerCards.innerHTML = `Player Cards ${playercard1.suit} of ${playercard1.rank} & ${playercard2.suit} of ${playercard2.rank}`
-    playerScore.innerHTML = `Player Score: ${playerCalculation}`
+    computerCardsDisplay.innerHTML = `Dealer Cards: ${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
+    // computerScore.innerHTML = `Dealer Score: ${computerCalculation}`
+    playerCards.innerHTML = `Player Cards: ${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
+    // playerScore.innerHTML = `Player Score: ${playerCalculation}`
+}
+
+hitButton.addEventListener('click', () => {
+    playerDealtCards.push(deck.shift())
+    playerHitCard.innerHTML = `${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
+})
+
+function gameWinner() {
+
 }
