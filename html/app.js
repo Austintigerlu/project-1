@@ -88,8 +88,8 @@ for (let i=0; i<deck.length; i++) {
 }
 shuffle(deck)
 // deck is now random
-// Score function with ace
 
+// Score function with ace
 function scoreCalculation(cardsInHand) {
     let scoreValue = 0;
     for (let i=0; i<cardsInHand.length; i++){
@@ -105,42 +105,92 @@ function scoreCalculation(cardsInHand) {
     return scoreValue
 }
 
-
+// User and dealer have cards in hand
 playerDealtCards = [deck.shift(), deck.shift()]
 dealerCards = [deck.shift(), deck.shift()]
 console.log(playerDealtCards)
 
-function dealCards() {
+// getScore
+function getScore(){
     dealerScore = scoreCalculation(dealerCards)
     userScore = scoreCalculation(playerDealtCards)
-    computerCardsDisplay.innerHTML = `Dealer Cards: ${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
+}
+
+// displays score
+function scoreDisplay(){
     computerScore.innerHTML = `Dealer Score: ${dealerScore}`
     playerScore.innerHTML = `Player Score: ${userScore}`
+}
+
+// cards are dealt
+function dealCards() {
+    getScore();
+    scoreDisplay();
+    computerCardsDisplay.innerHTML = `Dealer Cards: ${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
     playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
 }
 
+// hit button
 hitButton.addEventListener('click', () => {
-    playerDealtCards.push(deck.shift())
-    dealCards();
-    gameWinner();
+    let newCard = deck.shift();
+    playerDealtCards.push(newCard);
+    getScore();
+    scoreDisplay();
+    busted();
+    console.log(newCard)
+    playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
-standButton.addEventListener('click', ()=> {
-    if (dealCards <= 16) {
 
+standButton.addEventListener('click', ()=> {
+    hitButton.style.display = 'none'
+    if (scoreCalculation(dealerCards) <= 16) {
+        let newCard = deck.shift();
+        // console.log(newCard)
+        dealerCards.push(newCard);
+        getScore();
+        scoreDisplay();
+        busted();
+        computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
+    } else{
+        gameWinner();
+        getScore();
+        scoreDisplay();
     }
 })
-function gameWinner() {
+
+// Check to see if user card is over 21
+function busted(){
     if(scoreCalculation(playerDealtCards)>21) {
         alert('Busted')
         gameStarted = false;
-    } else if (scoreCalculation(playerDealtCards)>scoreCalculation(dealerCards)) {
+        return
+    } else if (scoreCalculation(playerDealtCards) === 21) {
+        alert('21');
+        gameStarted = false;
+        winningWallet();
+        return
+    }
+    if(scoreCalculation(dealerCards)>21) {
+        alert('Dealer Busted')
+        gameStarted = false;
+        winningWallet();
+    }
+}
+
+// check for game winner
+function gameWinner() {
+    if (scoreCalculation(playerDealtCards)>scoreCalculation(dealerCards)) {
         alert('Player Wins!')
-        let winnings = betAmount.value*2;
-        let winningsWallet = updatedWallet + winnings
-        walletAmount.innerHTML = winningsWallet
-        
-    } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards)) {
+        winningWallet();
+        } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards)) {
         alert('Dealer Wins!')
     }
+}
+
+// wallet update
+function winningWallet(){
+    let winnings = betAmount.value*2;
+        let winningsWallet = updatedWallet + winnings
+        walletAmount.innerHTML = winningsWallet
 }
