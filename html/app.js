@@ -15,8 +15,8 @@ let standButton = document.getElementById('stand')
 let userCards = document.querySelector('.userCards')
 let playerScore = document.getElementById('playerScore')
 let playerHitCard = document.getElementById('playerHitCard')
-
-// computer DOM
+let newGame = document.getElementById('newGame')
+// computer DOM 
 let computerCards = document.querySelector('.gameplay')
 let computerCardsDisplay = document.getElementById('computerCardsDisplay')
 let computerScore = document.getElementById('computerScore')
@@ -37,7 +37,7 @@ let updatedWallet =0;
 // changes bet value to the number player requested but doesnt envoke til button clicked
 function getBetAmount(){
     betPrint.innerHTML = `Player Bets ${betAmount.value}$`
-    betValue = betAmount.value;
+    return betValue = betAmount.value;
 }
 
 // Bet number is submitted wallet is updated and welcome message disappears
@@ -45,10 +45,14 @@ betButton.addEventListener('click', () => {
     getBetAmount();
     welcomeMessage.style.display = 'none';
     gameplay.style.display = 'inline';
+    hitButton.style.display = 'inline';
+    standButton.style.display = 'inline';
+    newGame.style.display = 'none';
     updatedWallet = walletAmountNumber - betValue;
     walletAmount.innerHTML = updatedWallet;
     dealCards();
     gameStarted = true;
+    savage21();
 })
 // betValue is now the ammount the player chose
 
@@ -74,7 +78,7 @@ for (let i = 0; i<suit.length; i++) {
     }
     return deck;
 }
-makeDeck()
+
 //  deck should have 52 cards
 // shuffle deck
 function shuffle(deck){
@@ -86,7 +90,8 @@ for (let i=0; i<deck.length; i++) {
     // console.log(deck[random])
 }
 }
-shuffle(deck)
+console.log(makeDeck())
+console.log(shuffle(deck))
 // deck is now random
 
 // Score function with ace
@@ -105,10 +110,6 @@ function scoreCalculation(cardsInHand) {
     return scoreValue
 }
 
-// User and dealer have cards in hand
-playerDealtCards = [deck.shift(), deck.shift()]
-dealerCards = [deck.shift(), deck.shift()]
-console.log(playerDealtCards)
 
 // getScore
 function getScore(){
@@ -124,57 +125,82 @@ function scoreDisplay(){
 
 // cards are dealt
 function dealCards() {
+    playerDealtCards = [deck.shift(), deck.shift()]
+    dealerCards = [deck.shift(), deck.shift()]
     getScore();
     scoreDisplay();
     computerCardsDisplay.innerHTML = `Dealer Cards: ${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
     playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
 }
-
+let newCard = deck.shift();
 // hit button
 hitButton.addEventListener('click', () => {
-    let newCard = deck.shift();
+    if (gameStarted === true) {
+    newCard = deck.shift();
     playerDealtCards.push(newCard);
+    }
     getScore();
     scoreDisplay();
     busted();
-    console.log(newCard)
+    // console.log(newCard)
     playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
 
 standButton.addEventListener('click', ()=> {
-    hitButton.style.display = 'none'
+    gameOver();
     if (scoreCalculation(dealerCards) <= 16) {
-        let newCard = deck.shift();
-        // console.log(newCard)
+        newCard = deck.shift();
         dealerCards.push(newCard);
-        getScore();
-        scoreDisplay();
-        busted();
         computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
-    } else{
-        gameWinner();
-        getScore();
-        scoreDisplay();
-    }
+        if (scoreCalculation(dealerCards) <= 16) {
+            newCard = deck.shift();
+            dealerCards.push(newCard);
+            getScore();
+            scoreDisplay();
+            computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
+        }
+    } 
+    getScore();
+    scoreDisplay();
+    busted();
+    gameWinner();
 })
+
+function gameOver(){
+    hitButton.style.display = 'none'
+    standButton.style.display = 'none'
+    newGame.style.display ='inline'
+}
 
 // Check to see if user card is over 21
 function busted(){
     if(scoreCalculation(playerDealtCards)>21) {
         alert('Busted')
         gameStarted = false;
+        gameOver();
         return
-    } else if (scoreCalculation(playerDealtCards) === 21) {
-        alert('21');
-        gameStarted = false;
-        winningWallet();
-        return
-    }
-    if(scoreCalculation(dealerCards)>21) {
+    } else if(scoreCalculation(dealerCards)>21) {
         alert('Dealer Busted')
         gameStarted = false;
         winningWallet();
+        gameOver();
+        return
+    }
+    savage21();
+}
+// 21 check
+function savage21(){
+    if (scoreCalculation(playerDealtCards) === 21) {
+        alert('21');
+        gameStarted = false;
+        winningWallet();
+        gameOver();
+        return
+    } else if (scoreCalculation(dealerCards) === 21) {
+        alert('dealer has 21!');
+        gameStarted = false;
+        gameOver();
     }
 }
 
@@ -183,8 +209,14 @@ function gameWinner() {
     if (scoreCalculation(playerDealtCards)>scoreCalculation(dealerCards)) {
         alert('Player Wins!')
         winningWallet();
-        } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards)) {
+        gameOver();
+        } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards) && gameStarted === true) {
         alert('Dealer Wins!')
+        gameOver();
+        } else if (scoreCalculation(playerDealtCards) === scoreCalculation(dealerCards)){
+        alert('Tie!');
+        gameOver()
+        walletAmount.innerHTML = walletAmountNumber;
     }
 }
 
@@ -194,3 +226,17 @@ function winningWallet(){
         let winningsWallet = updatedWallet + winnings
         walletAmount.innerHTML = winningsWallet
 }
+
+newGame.addEventListener('click', () =>{
+    welcomeMessage.style.display = 'inline';
+    gameplay.style.display = 'none';
+    gameStarted = false;
+    deck = [];
+    playerDealtCards = [];
+    dealerCards = [];
+    playerWin = false;
+    dealerScore = 0;
+    userScore = 0;
+    updatedWallet =0;
+    betValue = 0;
+})
