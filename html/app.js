@@ -33,6 +33,8 @@ let playerWin = false;
 let dealerScore = 0;
 let userScore = 0;
 let updatedWallet =0;
+let deck = [];
+let scoreValue = 0;
 
 // changes bet value to the number player requested but doesnt envoke til button clicked
 function getBetAmount(){
@@ -62,7 +64,7 @@ let suit = ['Hearts', 'Spades', 'Clubs', 'Diamonds']
 let rank = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
 let score = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
-let deck = [];
+
 
 // Creating the deck with suit, rank, and scores
 function makeDeck(){
@@ -90,13 +92,12 @@ for (let i=0; i<deck.length; i++) {
     // console.log(deck[random])
 }
 }
-console.log(makeDeck())
-console.log(shuffle(deck))
+
 // deck is now random
 
 // Score function with ace
 function scoreCalculation(cardsInHand) {
-    let scoreValue = 0;
+    scoreValue = 0;
     for (let i=0; i<cardsInHand.length; i++){
         let card = cardsInHand[i];
         scoreValue += card.score;
@@ -104,6 +105,7 @@ function scoreCalculation(cardsInHand) {
             if(scoreValue <= 11){
                 card.score = 10;
                 scoreValue += card.score;
+                console.log(scoreValue)
             }
         } 
     }
@@ -125,6 +127,8 @@ function scoreDisplay(){
 
 // cards are dealt
 function dealCards() {
+    makeDeck();
+    shuffle(deck);
     playerDealtCards = [deck.shift(), deck.shift()]
     dealerCards = [deck.shift(), deck.shift()]
     getScore();
@@ -232,6 +236,7 @@ newGame.addEventListener('click', () =>{
     gameplay.style.display = 'none';
     gameStarted = false;
     deck = [];
+    console.log(deck)
     playerDealtCards = [];
     dealerCards = [];
     playerWin = false;
@@ -239,4 +244,6 @@ newGame.addEventListener('click', () =>{
     userScore = 0;
     updatedWallet =0;
     betValue = 0;
+    scoreValue = 0;
+    playerHitCard.innerHTML = ''
 })
