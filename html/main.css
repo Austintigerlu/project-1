@@ -45,13 +45,13 @@ body{
 
 
 .computerCards img {
-    height: 150px;
-    width: 100px;
+    height: 100px;
+    width: 50px;
     margin: 5px;
 }
 
 .userCards img {
-    height: 150px;
-    width: 100px;
+    height: 100px;
+    width: 50px;
     margin: 5px;
 }

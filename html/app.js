@@ -17,10 +17,12 @@ let userCards = document.querySelector('.userCards')
 let playerScore = document.getElementById('playerScore')
 let playerHitCard = document.getElementById('playerHitCard')
 let newGame = document.getElementById('newGame')
+let userCardIMG = document.querySelector('.userCardIMG')
 // computer DOM 
 let computerCards = document.querySelector('.gameplay')
 let computerCardsDisplay = document.getElementById('computerCardsDisplay')
 let computerScore = document.getElementById('computerScore')
+let computerCardIMG = document.getElementById('computerPicture')
 
 // gameplay DOM
 let gameplay = document.querySelector('.gameplay');
@@ -64,8 +66,8 @@ betButton.addEventListener('click', () => {
 
 // Card deck
 // https://www.programiz.com/javascript/examples/shuffle-card used as reference to create deck
-let suit = ['Hearts', 'Spades', 'Clubs', 'Diamonds']
-let rank = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King']
+let suit = ['H', 'S', 'C', 'D']
+let rank = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
 let score = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
 
@@ -109,7 +111,7 @@ function scoreCalculation(cardsInHand) {
         console.log(card)
         scoreValue += card.score;
         console.log(scoreValue)
-        if(card.rank === 'Ace') {
+        if(card.rank === 'A') {
             if(dealerScore <= 10 || userScore <= 10){
                 card.score = 11;
                 scoreValue += card.score -1;
@@ -147,8 +149,17 @@ function dealCards() {
     dealerCards = [deck.shift(), deck.shift()]
     getScore();
     scoreDisplay();
-    computerCardsDisplay.innerHTML = `Dealer Cards: ${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
-    playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
+    let computerIMG = document.createElement("img");
+    computerIMG.src = `./cards/${dealerCards[1].rank}${dealerCards[1].suit}.svg`
+    document.getElementById("computerPicture").append(computerIMG)
+    computerCardsDisplay.innerHTML = `${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
+    // playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
+    let cardIMG = document.createElement("img");
+    cardIMG.src = `./cards/${playerDealtCards[0].rank}${playerDealtCards[0].suit}.svg`
+    document.getElementById("playerPicture").append(cardIMG)
+    let cardIMG2 = document.createElement("img");
+    cardIMG2.src = `./cards/${playerDealtCards[1].rank}${playerDealtCards[1].suit}.svg`
+    document.getElementById("playerPicture").append(cardIMG2)
 }
 let newCard = deck.shift();
 // hit button
@@ -161,24 +172,27 @@ hitButton.addEventListener('click', () => {
     scoreDisplay();
     busted();
     scoreValue = 0;
-    playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
-    playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
+    let hitCardIMG = document.createElement("img");
+    hitCardIMG.src = `./cards/${newCard.rank}${newCard.suit}.svg`
+    document.getElementById("playerHitCard").append(hitCardIMG)
+    // playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
+    // playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
 
 standButton.addEventListener('click', ()=> {
     gameOver();
-    if (dealerScore <= 16) {
+    while (dealerScore <= 16) {
         newCard = deck.shift();
         dealerCards.push(newCard);
         getScore();
         computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
-        if (dealerScore <= 16) {
-            newCard = deck.shift();
-            dealerCards.push(newCard);
-            getScore();
-            scoreDisplay();
-            computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
-        }
+        // if (dealerScore <= 16) {
+        //     newCard = deck.shift();
+        //     dealerCards.push(newCard);
+        //     getScore();
+        //     scoreDisplay();
+        //     computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
+        // }
     } 
     getScore();
     scoreDisplay();
@@ -274,4 +288,6 @@ newGame.addEventListener('click', () =>{
     playerHitCard.innerHTML = ''
     wallet = winningsWallet   
     walletAmount.innerHTML = `${wallet}`
+    computerCardIMG.innerHTML = '#hidden'
+    userCardIMG.innerHTML = ''
 })
