@@ -7,8 +7,8 @@ let welcomeMessage = document.querySelector('.welcomeMessage')
 // gets html line
 let walletAmount = document.getElementById('walletAmount')
 
-
-
+let backCard = document.createElement("img")
+backCard.src="./cards/RED_BACK.svg"
 // player DOM
 let playerCards = document.getElementById('playerCards')
 let hitButton = document.getElementById('hit')
@@ -140,7 +140,8 @@ function scoreDisplay(){
     computerScore.innerHTML = `Dealer Score: ${dealerScore}`
     playerScore.innerHTML = `Player Score: ${userScore}`
 }
-
+    let computerIMG = document.createElement("img");
+    
 // cards are dealt
 function dealCards() {
     makeDeck();
@@ -149,17 +150,19 @@ function dealCards() {
     dealerCards = [deck.shift(), deck.shift()]
     getScore();
     scoreDisplay();
-    let computerIMG = document.createElement("img");
-    computerIMG.src = `./cards/${dealerCards[1].rank}${dealerCards[1].suit}.svg`
-    document.getElementById("computerPicture").append(computerIMG)
-    computerCardsDisplay.innerHTML = `${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
+    computerCardIMG.append(backCard);
+    computerIMG.src = `./cards/${dealerCards[0].rank}${dealerCards[0].suit}.svg`
+    let computerIMG2 = document.createElement("img");
+    computerIMG2.src = `./cards/${dealerCards[1].rank}${dealerCards[1].suit}.svg`
+    computerCardIMG.append(computerIMG2)
+    // computerCardsDisplay.innerHTML = `${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
     // playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
     let cardIMG = document.createElement("img");
     cardIMG.src = `./cards/${playerDealtCards[0].rank}${playerDealtCards[0].suit}.svg`
-    document.getElementById("playerPicture").append(cardIMG)
+    userCardIMG.append(cardIMG)
     let cardIMG2 = document.createElement("img");
     cardIMG2.src = `./cards/${playerDealtCards[1].rank}${playerDealtCards[1].suit}.svg`
-    document.getElementById("playerPicture").append(cardIMG2)
+    userCardIMG.append(cardIMG2)
 }
 let newCard = deck.shift();
 // hit button
@@ -174,7 +177,7 @@ hitButton.addEventListener('click', () => {
     scoreValue = 0;
     let hitCardIMG = document.createElement("img");
     hitCardIMG.src = `./cards/${newCard.rank}${newCard.suit}.svg`
-    document.getElementById("playerHitCard").append(hitCardIMG)
+    playerHitCard.append(hitCardIMG)
     // playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     // playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
@@ -185,7 +188,9 @@ standButton.addEventListener('click', ()=> {
         newCard = deck.shift();
         dealerCards.push(newCard);
         getScore();
-        computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
+        let computerHit = document.createElement("img");
+        computerHit.src = `./cards/${newCard.rank}${newCard.suit}.svg`
+        computerCardsDisplay.append(computerHit)
         // if (dealerScore <= 16) {
         //     newCard = deck.shift();
         //     dealerCards.push(newCard);
@@ -194,6 +199,7 @@ standButton.addEventListener('click', ()=> {
         //     computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
         // }
     } 
+    backCard.replaceWith(computerIMG)
     getScore();
     scoreDisplay();
     busted();
@@ -288,6 +294,6 @@ newGame.addEventListener('click', () =>{
     playerHitCard.innerHTML = ''
     wallet = winningsWallet   
     walletAmount.innerHTML = `${wallet}`
-    computerCardIMG.innerHTML = '#hidden'
+    computerCardIMG.innerHTML = ''
     userCardIMG.innerHTML = ''
 })
