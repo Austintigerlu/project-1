@@ -82,6 +82,7 @@ for (let i = 0; i<suit.length; i++) {
         deck.push(card);
         }
     }
+    console.log(deck)
     return deck;
 }
 
@@ -102,25 +103,34 @@ for (let i=0; i<deck.length; i++) {
 // Score function with ace
 function scoreCalculation(cardsInHand) {
     scoreValue = 0;
+    console.log(cardsInHand)
     for (let i=0; i<cardsInHand.length; i++){
         let card = cardsInHand[i];
+        console.log(card)
         scoreValue += card.score;
+        console.log(scoreValue)
         if(card.rank === 'Ace') {
-            if(scoreValue <= 11){
-                card.score = 10;
-                scoreValue += card.score;
-                // console.log(scoreValue)
-            }
+            if(dealerScore <= 10 || userScore <= 10){
+                card.score = 11;
+                scoreValue += card.score -1;
+                console.log(scoreValue)
+            } else if(dealerScore > 21 || userScore > 21){
+                scoreValue += card.score - 11;
+            } 
         } 
     }
+    console.log(scoreValue)
     return scoreValue
+    
 }
 
 
 // getScore
 function getScore(){
     dealerScore = scoreCalculation(dealerCards)
+    console.log(dealerScore)
     userScore = scoreCalculation(playerDealtCards)
+    console.log(userScore)
 }
 
 // displays score
@@ -150,17 +160,19 @@ hitButton.addEventListener('click', () => {
     getScore();
     scoreDisplay();
     busted();
+    scoreValue = 0;
     playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
 
 standButton.addEventListener('click', ()=> {
     gameOver();
-    if (scoreCalculation(dealerCards) <= 16) {
+    if (dealerScore <= 16) {
         newCard = deck.shift();
         dealerCards.push(newCard);
+        getScore();
         computerCardsDisplay.append(` & ${newCard.rank} of ${newCard.suit}`)
-        if (scoreCalculation(dealerCards) <= 16) {
+        if (dealerScore <= 16) {
             newCard = deck.shift();
             dealerCards.push(newCard);
             getScore();
@@ -182,13 +194,13 @@ function gameOver(){
 
 // Check to see if user card is over 21
 function busted(){
-    if(scoreCalculation(playerDealtCards)>21) {
+    if(userScore>21) {
         alert('Busted')
         gameStarted = false;
         gameOver();
         winningWallet();
         return
-    } else if(scoreCalculation(dealerCards)>21) {
+    } else if(dealerScore>21) {
         alert('Dealer Busted')
         gameStarted = false;
         playerWin = true;
@@ -200,14 +212,14 @@ function busted(){
 }
 // 21 check
 function savage21(){
-    if (scoreCalculation(playerDealtCards) === 21) {
+    if (userScore === 21) {
         alert('21');
         gameStarted = false;
         playerWin = true;
         winningWallet();
         gameOver();
         return
-    } else if (scoreCalculation(dealerCards) === 21) {
+    } else if (dealerScore === 21) {
         alert('dealer has 21!');
         gameStarted = false;
         gameOver();
@@ -217,16 +229,16 @@ function savage21(){
 
 // check for game winner
 function gameWinner() {
-    if (scoreCalculation(playerDealtCards)>scoreCalculation(dealerCards)) {
+    if (userScore>dealerScore) {
         alert('Player Wins!')
         gameOver();
         playerWin = true;
         winningWallet();
-        } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards) && gameStarted === true) {
+        } else if (userScore<dealerScore && gameStarted === true) {
         alert('Dealer Wins!')
         gameOver();
         winningWallet();
-        } else if (scoreCalculation(playerDealtCards) === scoreCalculation(dealerCards)){
+        } else if (userScore === dealerScore){
         alert('Tie!');
         gameOver();
         winningsWallet = wallet
