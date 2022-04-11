@@ -51,16 +51,21 @@ function getBetAmount(){
 // Bet number is submitted wallet is updated and welcome message disappears
 betButton.addEventListener('click', () => {
     getBetAmount();
+    if(betValue > 0) {
     welcomeMessage.style.display = 'none';
     gameplay.style.display = 'inline';
     hitButton.style.display = 'inline';
     standButton.style.display = 'inline';
     newGame.style.display = 'none';
+    computerScore.style.display = 'none';
     updatedWallet = wallet - betValue;
     walletAmount.innerHTML = updatedWallet;
     dealCards();
     gameStarted = true;
     savage21();
+    } else {
+        alert('Yuu must place a bet')
+    }
 })
 // betValue is now the ammount the player chose
 
@@ -112,11 +117,11 @@ function scoreCalculation(cardsInHand) {
         scoreValue += card.score;
         console.log(scoreValue)
         if(card.rank === 'A') {
-            if(dealerScore <= 10 || userScore <= 10){
+            if(userScore <= 10){
                 card.score = 11;
                 scoreValue += card.score -1;
                 console.log(scoreValue)
-            } else if(dealerScore > 21 || userScore > 21){
+            } else if(userScore > 21){
                 scoreValue += card.score - 11;
             } 
         } 
@@ -140,7 +145,7 @@ function scoreDisplay(){
     computerScore.innerHTML = `Dealer Score: ${dealerScore}`
     playerScore.innerHTML = `Player Score: ${userScore}`
 }
-    let computerIMG = document.createElement("img");
+    let computerIMG;
     
 // cards are dealt
 function dealCards() {
@@ -151,7 +156,8 @@ function dealCards() {
     getScore();
     scoreDisplay();
     computerCardIMG.append(backCard);
-    computerIMG.src = `./cards/${dealerCards[0].rank}${dealerCards[0].suit}.svg`
+    computerIMG = document.createElement("img");
+    computerIMG.src = `./cards/${dealerCards[0].rank}${dealerCards[0].suit}.svg`;
     let computerIMG2 = document.createElement("img");
     computerIMG2.src = `./cards/${dealerCards[1].rank}${dealerCards[1].suit}.svg`
     computerCardIMG.append(computerIMG2)
@@ -174,10 +180,9 @@ hitButton.addEventListener('click', () => {
     getScore();
     scoreDisplay();
     busted();
-    scoreValue = 0;
     let hitCardIMG = document.createElement("img");
     hitCardIMG.src = `./cards/${newCard.rank}${newCard.suit}.svg`
-    playerHitCard.append(hitCardIMG)
+    userCardIMG.append(hitCardIMG)
     // playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     // playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
@@ -190,7 +195,7 @@ standButton.addEventListener('click', ()=> {
         getScore();
         let computerHit = document.createElement("img");
         computerHit.src = `./cards/${newCard.rank}${newCard.suit}.svg`
-        computerCardsDisplay.append(computerHit)
+        computerCardIMG.append(computerHit)
         // if (dealerScore <= 16) {
         //     newCard = deck.shift();
         //     dealerCards.push(newCard);
@@ -210,6 +215,7 @@ function gameOver(){
     hitButton.style.display = 'none'
     standButton.style.display = 'none'
     newGame.style.display ='inline'
+    computerScore.style.display = 'inline';
 }
 
 // Check to see if user card is over 21
@@ -219,6 +225,7 @@ function busted(){
         gameStarted = false;
         gameOver();
         winningWallet();
+        backCard.replaceWith(computerIMG)
         return
     } else if(dealerScore>21) {
         alert('Dealer Busted')
@@ -226,6 +233,7 @@ function busted(){
         playerWin = true;
         winningWallet();
         gameOver();
+        backCard.replaceWith(computerIMG)
         return
     }
     savage21();
@@ -238,12 +246,14 @@ function savage21(){
         playerWin = true;
         winningWallet();
         gameOver();
+        backCard.replaceWith(computerIMG)
         return
     } else if (dealerScore === 21) {
         alert('dealer has 21!');
         gameStarted = false;
         gameOver();
         winningWallet();
+        backCard.replaceWith(computerIMG)
     }
 }
 
@@ -261,7 +271,7 @@ function gameWinner() {
         } else if (userScore === dealerScore){
         alert('Tie!');
         gameOver();
-        winningsWallet = wallet
+        winningsWallet = wallet + betValue
     }
 }
 
@@ -271,6 +281,11 @@ function winningWallet(){
         let winnings = betAmount.value*2;
         winningsWallet = updatedWallet + winnings
         walletAmount.innerHTML = winningsWallet
+        if(userScore === 21) {
+            let winnings = betAmount.value*3;
+        winningsWallet = updatedWallet + winnings
+        walletAmount.innerHTML = winningsWallet
+        }
     } else {
         winningsWallet = updatedWallet
         
@@ -279,7 +294,7 @@ function winningWallet(){
 let winningsWallet;
 // new Game
 newGame.addEventListener('click', () =>{
-    welcomeMessage.style.display = 'inline';
+    welcomeMessage.style.display = null;
     gameplay.style.display = 'none';
     gameStarted = false;
     deck = [];
@@ -296,4 +311,5 @@ newGame.addEventListener('click', () =>{
     walletAmount.innerHTML = `${wallet}`
     computerCardIMG.innerHTML = ''
     userCardIMG.innerHTML = ''
+    computerCardsDisplay.innerHTML = ''
 })

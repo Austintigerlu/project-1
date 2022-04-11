@@ -1,32 +1,37 @@
 body{
     background: url(https://cfmarinecorpsfoundation.org/wp-content/uploads/2019/07/red-casino-background.jpg);
     background-size: cover;
+    background-repeat: no-repeat;
     text-align: center;
-    margin: auto;
+    
 }
 
 /* Controls the Title */
 .gameTitle{
     color: goldenrod;
 }
+.gameplay{
+    
+}
 /* Controls the Game Board */
 .gameTable {
-    display:flex;
-    width: auto;
-    padding: 150px 100px 200px 100px;
-    background-color: rgb(80, 215, 80);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: -1;
+  border: 10px solid black;
+  background-color: green;
+  margin: auto;
+  max-width: 800px;
+  display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .welcomeMessage {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
-    
+    max-width: 700px;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
 }
 /* Controls the Wallet */
 .wallet{
@@ -35,23 +40,31 @@ body{
     padding: 10px;
     position: fixed;
     bottom: 10%;
-    left: 20%;
+    right: 20%;
 }
 
 /* .betButton {
     justify-content: center;
     align-items: flex-end;
 } */
-
-
-.computerCards img {
-    height: 100px;
-    width: 50px;
+.dealerContent{
+    border: 2px solid;
+    margin: 20px;
+}
+.computerCardIMG {
     margin: 5px;
 }
-
-.userCards img {
-    height: 100px;
-    width: 50px;
-    margin: 5px;
+.userCards {
+    border: 2px solid;
+    margin: 20px;
+}
+img {
+    
+    height: 150px;
+    width: 100px;
+    margin: 10px;
+}
+button {
+    padding: 10px;
+    margin: 20px;
 }
