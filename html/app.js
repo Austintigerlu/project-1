@@ -3,10 +3,11 @@ let betAmount = document.getElementById('betAmount');
 let betPrint = document.getElementById('betAmmountPrint')
 let welcomeMessage = document.querySelector('.welcomeMessage')
 // gets bet number as a value
-let walletAmountNumber = document.getElementById('walletAmount').innerHTML
+// let walletAmountNumber = document.getElementById('walletAmount').innerHTML
 // gets html line
 let walletAmount = document.getElementById('walletAmount')
-let betValue = 0;
+
+
 
 // player DOM
 let playerCards = document.getElementById('playerCards')
@@ -35,7 +36,10 @@ let userScore = 0;
 let updatedWallet =0;
 let deck = [];
 let scoreValue = 0;
+let betValue = 0;
+let wallet = 100;
 
+walletAmount.innerHTML = wallet
 // changes bet value to the number player requested but doesnt envoke til button clicked
 function getBetAmount(){
     betPrint.innerHTML = `Player Bets ${betAmount.value}$`
@@ -50,7 +54,7 @@ betButton.addEventListener('click', () => {
     hitButton.style.display = 'inline';
     standButton.style.display = 'inline';
     newGame.style.display = 'none';
-    updatedWallet = walletAmountNumber - betValue;
+    updatedWallet = wallet - betValue;
     walletAmount.innerHTML = updatedWallet;
     dealCards();
     gameStarted = true;
@@ -105,7 +109,7 @@ function scoreCalculation(cardsInHand) {
             if(scoreValue <= 11){
                 card.score = 10;
                 scoreValue += card.score;
-                console.log(scoreValue)
+                // console.log(scoreValue)
             }
         } 
     }
@@ -146,7 +150,6 @@ hitButton.addEventListener('click', () => {
     getScore();
     scoreDisplay();
     busted();
-    // console.log(newCard)
     playerCards.append(` & ${newCard.rank} of ${newCard.suit}`)
     playerHitCard.innerHTML = `New Card: ${playerDealtCards[playerDealtCards.length-1].rank} of ${playerDealtCards[playerDealtCards.length-1].suit}`
 })
@@ -183,10 +186,12 @@ function busted(){
         alert('Busted')
         gameStarted = false;
         gameOver();
+        winningWallet();
         return
     } else if(scoreCalculation(dealerCards)>21) {
         alert('Dealer Busted')
         gameStarted = false;
+        playerWin = true;
         winningWallet();
         gameOver();
         return
@@ -198,6 +203,7 @@ function savage21(){
     if (scoreCalculation(playerDealtCards) === 21) {
         alert('21');
         gameStarted = false;
+        playerWin = true;
         winningWallet();
         gameOver();
         return
@@ -205,6 +211,7 @@ function savage21(){
         alert('dealer has 21!');
         gameStarted = false;
         gameOver();
+        winningWallet();
     }
 }
 
@@ -212,38 +219,47 @@ function savage21(){
 function gameWinner() {
     if (scoreCalculation(playerDealtCards)>scoreCalculation(dealerCards)) {
         alert('Player Wins!')
-        winningWallet();
         gameOver();
+        playerWin = true;
+        winningWallet();
         } else if (scoreCalculation(playerDealtCards)<scoreCalculation(dealerCards) && gameStarted === true) {
         alert('Dealer Wins!')
         gameOver();
+        winningWallet();
         } else if (scoreCalculation(playerDealtCards) === scoreCalculation(dealerCards)){
         alert('Tie!');
-        gameOver()
-        walletAmount.innerHTML = walletAmountNumber;
+        gameOver();
+        winningsWallet = wallet
     }
 }
 
 // wallet update
 function winningWallet(){
-    let winnings = betAmount.value*2;
-        let winningsWallet = updatedWallet + winnings
+    if(playerWin === true){
+        let winnings = betAmount.value*2;
+        winningsWallet = updatedWallet + winnings
         walletAmount.innerHTML = winningsWallet
+    } else {
+        winningsWallet = updatedWallet
+        
+    }
 }
-
+let winningsWallet;
+// new Game
 newGame.addEventListener('click', () =>{
     welcomeMessage.style.display = 'inline';
     gameplay.style.display = 'none';
     gameStarted = false;
     deck = [];
-    console.log(deck)
     playerDealtCards = [];
     dealerCards = [];
     playerWin = false;
     dealerScore = 0;
     userScore = 0;
-    updatedWallet =0;
+    updatedWallet = 0;
     betValue = 0;
     scoreValue = 0;
     playerHitCard.innerHTML = ''
+    wallet = winningsWallet   
+    walletAmount.innerHTML = `${wallet}`
 })
