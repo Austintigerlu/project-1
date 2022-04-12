@@ -42,7 +42,9 @@ body{
     bottom: 10%;
     right: 20%;
 }
-
+#winner{
+    font-size: 50px;
+}
 /* .betButton {
     justify-content: center;
     align-items: flex-end;

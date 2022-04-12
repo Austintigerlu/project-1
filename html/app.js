@@ -6,7 +6,8 @@ let welcomeMessage = document.querySelector('.welcomeMessage')
 // let walletAmountNumber = document.getElementById('walletAmount').innerHTML
 // gets html line
 let walletAmount = document.getElementById('walletAmount')
-
+let winnerText = document.getElementById('winner')
+console.log(winnerText)
 let backCard = document.createElement("img")
 backCard.src="./cards/RED_BACK.svg"
 // player DOM
@@ -64,7 +65,7 @@ betButton.addEventListener('click', () => {
     gameStarted = true;
     savage21();
     } else {
-        alert('Yuu must place a bet')
+        alert('You must place a bet')
     }
 })
 // betValue is now the ammount the player chose
@@ -216,23 +217,24 @@ function gameOver(){
     standButton.style.display = 'none'
     newGame.style.display ='inline'
     computerScore.style.display = 'inline';
+    winnerText.style.display = 'inline';
 }
 
 // Check to see if user card is over 21
 function busted(){
     if(userScore>21) {
-        alert('Busted')
         gameStarted = false;
         gameOver();
+        winnerText.innerHTML = "Player Busted"
         winningWallet();
         backCard.replaceWith(computerIMG)
         return
     } else if(dealerScore>21) {
-        alert('Dealer Busted')
         gameStarted = false;
         playerWin = true;
         winningWallet();
         gameOver();
+        winnerText.innerHTML = "Dealer Busted Player Wins"
         backCard.replaceWith(computerIMG)
         return
     }
@@ -241,17 +243,17 @@ function busted(){
 // 21 check
 function savage21(){
     if (userScore === 21) {
-        alert('21');
         gameStarted = false;
         playerWin = true;
         winningWallet();
         gameOver();
+        winnerText.innerHTML = "Player Wins"
         backCard.replaceWith(computerIMG)
         return
     } else if (dealerScore === 21) {
-        alert('dealer has 21!');
         gameStarted = false;
         gameOver();
+        winnerText.innerHTML = "Dealer Wins"
         winningWallet();
         backCard.replaceWith(computerIMG)
     }
@@ -260,18 +262,18 @@ function savage21(){
 // check for game winner
 function gameWinner() {
     if (userScore>dealerScore) {
-        alert('Player Wins!')
         gameOver();
+        winnerText.innerHTML = "Player Wins"
         playerWin = true;
         winningWallet();
         } else if (userScore<dealerScore && gameStarted === true) {
-        alert('Dealer Wins!')
-        gameOver();
-        winningWallet();
+            gameOver();
+            winnerText.innerHTML = "Dealer Wins"
+            winningWallet();
         } else if (userScore === dealerScore){
-        alert('Tie!');
-        gameOver();
-        winningsWallet = wallet + betValue
+            gameOver();
+            winnerText.innerHTML = "Tie"
+            winningsWallet = wallet + betValue
     }
 }
 
@@ -312,4 +314,5 @@ newGame.addEventListener('click', () =>{
     computerCardIMG.innerHTML = ''
     userCardIMG.innerHTML = ''
     computerCardsDisplay.innerHTML = ''
+    winnerText.innerHTML = ''
 })
