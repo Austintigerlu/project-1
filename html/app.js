@@ -1,3 +1,6 @@
+
+// https://www.programiz.com/javascript/examples/shuffle-card used as reference to create deck
+// http://richardschneider.github.io/cardsJS/ used to add pictures
 // DOM
 let betAmount = document.getElementById('betAmount');
 let betPrint = document.getElementById('betAmmountPrint')
@@ -41,6 +44,9 @@ let betValue = 0;
 let wallet = 100;
 let winningsWallet;
 let newCard = deck.shift();
+let aceCount = 0;
+let winnings = 0;
+let card;
 
 walletAmount.innerHTML = wallet
 
@@ -72,8 +78,6 @@ betButton.addEventListener('click', () => {
 // betValue is now the amount the player chooses
 
 // Card deck
-// https://www.programiz.com/javascript/examples/shuffle-card used as reference to create deck
-// http://richardschneider.github.io/cardsJS/ used to add pictures
 let suit = ['H', 'S', 'C', 'D']
 let rank = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
 let score = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -111,19 +115,54 @@ for (let i=0; i<deck.length; i++) {
 function scoreCalculation(cardsInHand) {
     scoreValue = 0;
     for (let i=0; i<cardsInHand.length; i++){
-        let card = cardsInHand[i];
+        card = cardsInHand[i];
         scoreValue += card.score;
         if(card.rank === 'A') {
-            if(userScore <= 10){
+            if(userScore <= 10 && aceCount < 2 || dealerScore <= 10 && aceCount <2 ){
+                aceCount++;
                 card.score = 11;
+                console.log(aceCount)
                 scoreValue += card.score -1;
-            } else if(userScore > 21){
-                scoreValue += card.score - 11;
-            } 
+                console.log(userScore)
+            }
         } 
-    }
+        console.log(userScore)
+        console.log(dealerScore)
+    } 
     return scoreValue
-    
+}
+
+function aceFunction(){
+    if(userScore > 21 && aceCount > 0 && aceCount<2){
+        console.log(userScore)
+        console.log(playerDealtCards)
+        for(let i=0; i<playerDealtCards.length; i++){
+            card = playerDealtCards[i]
+            console.log(card)
+            if(card.rank === 'A'){
+                aceCount++;
+                console.log(card)
+                console.log(aceCount)
+                card.score -= 10;
+                userScore -= 10;
+                console.log(userScore)
+            }
+        }
+    } else if(dealerScore > 21 && aceCount >0 && aceCount<2){
+        console.log(dealerScore)
+        console.log(dealerCards)
+        for(let i=0; i<dealerCards.length; i++){
+            card = dealerCards[i]
+            if(card.rank === 'A'){
+                console.log(card)
+                aceCount++;
+                console.log(aceCount)
+                card.score -= 10;
+                dealerScore -= 10;
+                console.log(dealerScore)
+            }
+        }
+    }  
 }
 
 
@@ -147,6 +186,7 @@ function dealCards() {
     playerDealtCards = [deck.shift(), deck.shift()]
     dealerCards = [deck.shift(), deck.shift()]
     getScore();
+    aceFunction();
     scoreDisplay();
     computerCardIMG.append(backCard);
     computerIMG = document.createElement("img");
@@ -154,7 +194,7 @@ function dealCards() {
     let computerIMG2 = document.createElement("img");
     computerIMG2.src = `./cards/${dealerCards[1].rank}${dealerCards[1].suit}.svg`
     computerCardIMG.append(computerIMG2)
-    // computerCardsDisplay.innerHTML = `${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
+    computerCardsDisplay.innerHTML = `${dealerCards[0].rank} of ${dealerCards[0].suit} & ${dealerCards[1].rank} of ${dealerCards[1].suit}`
     // playerCards.innerHTML = `${playerDealtCards[0].rank} of ${playerDealtCards[0].suit} & ${playerDealtCards[1].rank} of ${playerDealtCards[1].suit}`
     let cardIMG = document.createElement("img");
     cardIMG.src = `./cards/${playerDealtCards[0].rank}${playerDealtCards[0].suit}.svg`
@@ -171,8 +211,9 @@ hitButton.addEventListener('click', () => {
     playerDealtCards.push(newCard);
     }
     getScore();
-    scoreDisplay();
+    aceFunction();
     busted();
+    scoreDisplay();
     let hitCardIMG = document.createElement("img");
     hitCardIMG.src = `./cards/${newCard.rank}${newCard.suit}.svg`
     userCardIMG.append(hitCardIMG)
@@ -188,6 +229,7 @@ standButton.addEventListener('click', ()=> {
         newCard = deck.shift();
         dealerCards.push(newCard);
         getScore();
+        aceFunction();
         let computerHit = document.createElement("img");
         computerHit.src = `./cards/${newCard.rank}${newCard.suit}.svg`
         computerCardIMG.append(computerHit)
@@ -238,7 +280,6 @@ function savage21(){
         gameOver();
         winnerText.innerHTML = "Player Wins"
         backCard.replaceWith(computerIMG)
-        return
     } else if (dealerScore === 21) {
         gameStarted = false;
         gameOver();
@@ -262,14 +303,14 @@ function gameWinner() {
         } else if (userScore === dealerScore){
             gameOver();
             winnerText.innerHTML = "Tie"
-            winningsWallet = wallet + betValue
+            winningsWallet = wallet
     }
 }
 
 // amount of winnings
 function winningWallet(){
     if(playerWin === true){
-        let winnings = betValue*2;
+        winnings = betValue*2;
         winningsWallet = updatedWallet + winnings
         walletAmount.innerHTML = winningsWallet
         if(userScore === 21) {
@@ -297,6 +338,9 @@ newGame.addEventListener('click', () =>{
     updatedWallet = 0;
     betValue = 0;
     scoreValue = 0;
+    winnings = 0;
+    aceCount = 0;
+    card = 0;
     playerHitCard.innerHTML = ''
     wallet = winningsWallet   
     walletAmount.innerHTML = `${wallet}`
