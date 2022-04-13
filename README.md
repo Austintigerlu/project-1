@@ -1,6 +1,11 @@
 # BlackJack
 Game is to 21 without going over
 
+## Screenshots
+<img width="1276" alt="Screen Shot 2022-04-13 at 9 23 57 AM" src="https://user-images.githubusercontent.com/101610362/163190202-d71e12ae-1321-4725-989c-117d20c367f5.png">
+<img width="862" alt="Screen Shot 2022-04-13 at 9 24 07 AM" src="https://user-images.githubusercontent.com/101610362/163190236-24dc5bab-54bc-4475-b73b-606fac17ab98.png">
+<img width="1890" alt="Screen Shot 2022-04-13 at 9 24 23 AM" src="https://user-images.githubusercontent.com/101610362/163190268-b1b5d4f4-64b1-4d2d-9182-82bbf727b59b.png">
+
 ## Basic User Story
 1. Home Page w/ a play button that brings you to the table
 2. Bet button where you can select how much money to bet
@@ -27,3 +32,4 @@ https://austintigerlu.github.io/BlackJack-Game/
 1. Animating transitions
 2. Adding chips
 3. Having a dealer picture
+4. Pit Boss function
